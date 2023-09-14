@@ -5,7 +5,6 @@ function fetching() {
             console.log(message);
             document.getElementById("myptag").innerText = message
         })
-
     };
 const mybutton = document.getElementsByTagName('button')[0]
 mybutton.addEventListener('click', fetching)
