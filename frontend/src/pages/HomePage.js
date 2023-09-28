@@ -6,6 +6,7 @@ function HomePage() {
     const [isFilmLoading, setIsFilmLoading] = useState(true);
     const [actorData, setActorData] = useState([]);
     const [isActorLoading, setIsActorLoading] = useState(true);
+    const [filmDetailData, setFilmDetailData] = useState([]);
     
     useEffect(() => {
         axios.get('http://localhost:8384/top5films')
@@ -26,16 +27,8 @@ function HomePage() {
     }, [])
 
     const GetFilmDetail = async (film) => {
-        const sentfilm = await fetch('http://localhost:8384/film', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(film)
-        })
-
-        const filmsent = await sentfilm.json()
-        console.log(filmsent)
+        setFilmDetailData(film);
+        console.log(filmDetailData)
     }
 
   return (
@@ -58,7 +51,20 @@ function HomePage() {
           ))}
         </ul>
         </div>
+
+        <div>
+            <h1>Film Details</h1>
+            { filmDetailData !== null && (
+                Object.entries(filmDetailData).map(([key, value]) => (
+                
+                <p>
+                    {key}: {value}
+                </p>
+                ))
+            )}
+        </div>
         
+        <h2>Top Five Actors</h2>
         <div>
         <ul>
           {actorData.map((actors, index) => (
