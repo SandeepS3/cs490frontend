@@ -90,14 +90,27 @@ function HomePage() {
         </div>
 
         <div>
-            <h1>Actor Details</h1>
-            { actorDetailData !== null && (
-                Object.entries(actorDetailData).map(([key, value]) => (
-                <p>
-                    {key}: {value}
-                </p>
-                ))
-            )}
+        { actorDetailData.length !== 0 ? (
+            <ul>
+            <li>
+            <h3>Actor ID: </h3>{ actorData[0].actor_id }
+            </li>
+            <li>
+            <h3>Actor Name: </h3> {actorData[0].first_name} {actorData[0].last_name}
+            </li>
+        </ul>
+            ): null}
+
+        <ul>
+          {actorDetailData.map((actor, index) => (
+                Object.entries(actor).map(([key, value]) => (
+                    <p>
+                        {key}: {value}
+                    </p>
+                    ))
+          ))}
+        </ul>
+
         </div>
 
     </div>
