@@ -90,6 +90,7 @@ function HomePage() {
         </div>
 
         <div>
+        <h1>Actor Details</h1>
         { actorDetailData.length !== 0 ? (
             <ul>
             <li>

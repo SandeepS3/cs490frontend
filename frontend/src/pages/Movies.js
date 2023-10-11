@@ -1,10 +1,110 @@
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import NavBar from '../components/NavBar'
 
 function Movies() {
+    const [movieData, setMovieData] = useState([]);
+
+    const [inputMName, setMNameValue] = useState('');
+    const handleMNameInputChange = (event) => {
+        setMNameValue(event.target.value);
+    };
+
+    const [inputAName, setANameValue] = useState('');
+    const handleANameInputChange = (event) => {
+        setANameValue(event.target.value);
+    };
+
+    const [inputGenre, setGenreValue] = useState('');
+    const handleGenreInputChange = (event) => {
+        setGenreValue(event.target.value);
+    };
+
+    function handleInput(inVal) {
+        if (inVal === "Actor"){
+            axios.post('http://localhost:8384/actornamemovie', {actorname: inputAName})
+            .then((response) => {
+                setMovieData(response.data)
+                console.log(response.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            });
+        }
+
+        if (inVal === "Movie"){
+            axios.post('http://localhost:8384/movienamemovie', {moviename: inputMName})
+            .then((response) => {
+                setMovieData(response.data)
+                console.log(response.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            });
+        }
+
+        if (inVal === "Genre"){
+            axios.post('http://localhost:8384/genremovie', {genre: inputGenre})
+            .then((response) => {
+                setMovieData(response.data)
+                console.log(response.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            });
+        }
+    }
+
+    
     return (
         <div>
             <NavBar />
             <h1>Movies Page</h1>
+
+            <label htmlFor="actorNameInput">Enter Actor Name:</label>
+            <input
+                type="text"
+                id="actorNameInput"
+                value={inputAName}
+                onChange={handleANameInputChange}
+            />
+            <button onClick={() => handleInput("Actor")}>Search</button>
+
+
+            <label htmlFor="movieNameInput">Enter Movie Name:</label>
+            <input
+                type="text"
+                id="movieNameInput"
+                value={inputMName}
+                onChange={handleMNameInputChange}
+            />
+            <button onClick={() => handleInput("Movie")}>Search</button>
+
+
+            <label htmlFor="genreInput">Enter Genre:</label>
+            <input
+                type="text"
+                id="genreInput"
+                value={inputGenre}
+                onChange={handleGenreInputChange}
+            />
+            <button onClick={() => handleInput("Genre")}>Search</button>
+
+
+
+            <h2>Movies</h2>
+            <ul>
+                {movieData.map((movie, index) => (
+                    <li 
+                    className="list-group-item"
+                    key={index}
+                    // onClick={() => GetCustomerDetail(customer)}
+                    >
+                        {movie.title}
+                    </li>
+                ))}
+            </ul>
+
         </div>
     )
 }
