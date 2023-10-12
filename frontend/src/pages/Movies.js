@@ -77,7 +77,7 @@ function Movies() {
     const rentfilm = (inputCustomerID, movieDetailData) => {
         console.log(inputCustomerID)
         const filmid = movieDetailData[0].film_id
-        axios.post('http://localhost:8384/rentmovie', {customerid: inputCustomerID, movieid: filmid})
+        axios.post('http://localhost:8384/rentmovie', {customerid: inputCustomerID})
         .then((response) => {
             alert(response.data)
         })

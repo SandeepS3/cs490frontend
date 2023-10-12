@@ -193,6 +193,8 @@ function Customers() {
                     ))}
 
             </ul>
+
+            <button>Edit Customer</button>
             </Popup> ) : null
         }
         </div>

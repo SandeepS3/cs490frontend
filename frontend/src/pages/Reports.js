@@ -9,7 +9,7 @@ function Reports() {
         axios.get('http://localhost:8384/rentedfilms')
         .then((response) => {
             setRentalInfo(response.data)
-            console.log(response.data)
+            console.log(rentalInfo)
         })
         .catch((err) => {
             console.log(err)
