@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import NavBar from '../components/NavBar'
+import Popup from '../components/Popup'
 
 function Movies() {
     const [movieData, setMovieData] = useState([]);
@@ -25,7 +26,7 @@ function Movies() {
             axios.post('http://localhost:8384/actornamemovie', {actorname: inputAName})
             .then((response) => {
                 setMovieData(response.data)
-                console.log(response.data)
+
             })
             .catch((err) => {
                 console.log(err)
@@ -36,7 +37,7 @@ function Movies() {
             axios.post('http://localhost:8384/movienamemovie', {moviename: inputMName})
             .then((response) => {
                 setMovieData(response.data)
-                console.log(response.data)
+
             })
             .catch((err) => {
                 console.log(err)
@@ -47,7 +48,7 @@ function Movies() {
             axios.post('http://localhost:8384/genremovie', {genre: inputGenre})
             .then((response) => {
                 setMovieData(response.data)
-                console.log(response.data)
+
             })
             .catch((err) => {
                 console.log(err)
@@ -55,7 +56,19 @@ function Movies() {
         }
     }
 
-    
+    const [buttonPopup, setButtonPopup] = useState(false);
+    const [movieDetailData, setMovieDetailData] = useState([]);
+    const GetMovieDetail = (movie) => {
+        axios.post('http://localhost:8384/moviedetail', {film: movie.title})
+        .then((response) => {
+            setMovieDetailData(response.data)
+            setButtonPopup(true)
+        })
+        .catch((err) => {
+            console.log(err)
+        });
+    }
+
     return (
         <div>
             <NavBar />
@@ -98,15 +111,29 @@ function Movies() {
                     <li 
                     className="list-group-item"
                     key={index}
-                    // onClick={() => GetCustomerDetail(customer)}
+                    onClick={() => GetMovieDetail(movie)}
                     >
                         {movie.title}
                     </li>
                 ))}
             </ul>
+            
 
+            <Popup trigger={buttonPopup} setTrigger={setButtonPopup}>
+
+            <ul>
+          {movieDetailData.map((movie, index) => (
+                Object.entries(movie).map(([key, value]) => (
+                    <p>
+                        {key}: {value}
+                    </p>
+                    ))
+          ))}
+            </ul>
+            </Popup>
         </div>
-    )
+        
+    );
 }
 
 export default Movies
