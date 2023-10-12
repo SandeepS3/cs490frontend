@@ -49,18 +49,12 @@ function Customers() {
 
     }
 
+
     const [buttonPopup, setButtonPopup] = useState(false);
     const [customerDetailData, setCustomerDetailData] = useState([]);
-    const GetCustomerDetail = (id) => {
-        axios.post('http://localhost:8384/customerdetails', {customerdetails: id})
-        .then((response) => {
-            setCustomerDetailData(response.data)
-            setButtonPopup(true)
-            console.log(customerDetailData)
-        })
-        .catch((err) => {
-            console.log(err)
-        });
+    const GetCustomerDetail = (customer) => {
+        setCustomerDetailData(customer)
+        setButtonPopup(true)
     }
 
     const [isFormVisible, setFormVisible] = useState(false);
@@ -180,26 +174,27 @@ function Customers() {
                     <li 
                     className="list-group-item"
                     key={index}
-                    onClick={() => GetCustomerDetail(customer.customer_id)}
+                    onClick={() => {GetCustomerDetail(customer)}}
                     >
                         {customer.first_name} {customer.last_name}
                     </li>
                 ))}
             </ul>
             </div>
-
+            
+            {customerDetailData.length !== 0 ? (
             <Popup trigger={buttonPopup} setTrigger={setButtonPopup}>
-            {/* <ul>
-          {customerDetailData.map((customer, index) => (
-                Object.entries(customer).map(([key, value]) => (
+            <ul>
+
+                {Object.entries(customerDetailData).map(([key, value]) => (
                     <p>
                         {key}: {value}
                     </p>
-                    ))
-          ))}
-            </ul> */}
-            </Popup>
+                    ))}
 
+            </ul>
+            </Popup> ) : null
+        }
         </div>
     )
 }

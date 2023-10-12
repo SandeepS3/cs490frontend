@@ -79,10 +79,10 @@ function Movies() {
         const filmid = movieDetailData[0].film_id
         axios.post('http://localhost:8384/rentmovie', {customerid: inputCustomerID, movieid: filmid})
         .then((response) => {
-            setMovieDetailData(response.data)
+            alert(response.data)
         })
         .catch((err) => {
-            console.log(err)
+            alert(err)
         });
         setButtonPopup(false)
     }
