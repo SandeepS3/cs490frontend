@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import NavBar from '../components/NavBar'
+import Popup from '../components/Popup'
+
 
 function Customers() {
     const [customerData, setCustomerData] = useState([]);
@@ -47,16 +49,113 @@ function Customers() {
 
     }
 
+    const [buttonPopup, setButtonPopup] = useState(false);
     const [customerDetailData, setCustomerDetailData] = useState([]);
-    const GetCustomerDetail = async (customer) => {
-        setCustomerDetailData(customer);
-        console.log(customerDetailData)
+    const GetCustomerDetail = (id) => {
+        axios.post('http://localhost:8384/customerdetails', {customerdetails: id})
+        .then((response) => {
+            setCustomerDetailData(response.data)
+            setButtonPopup(true)
+            console.log(customerDetailData)
+        })
+        .catch((err) => {
+            console.log(err)
+        });
+    }
+
+    const [isFormVisible, setFormVisible] = useState(false);
+    const handleFormToggle = () => {
+      setFormVisible(!isFormVisible);
+    };
+
+    
+
+    const [fName, setFName] = useState("")
+    const [lName, setLName] = useState("")
+    const [email, setEmail] = useState("")
+    const [addressID, setAddressID] = useState("")
+    
+    const handleSubmit = (event) => {
+        event.preventDefault()
+        axios.post('http://localhost:8384/addcustomer', {firstname: fName, lastname: lName, email: email, addressid: addressID})
+        .then((response) => {
+            alert(response.data)
+            setFormVisible(false)
+        })
+        .catch((err) => {
+            console.log(err)
+        });
+    }
+
+
+    const [deleteID, setDeleteID] = useState('');
+    const handleDeleteIDChange = (event) => {
+        setDeleteID(event.target.value);
+    };
+    const deleteCustomer = () => {
+        axios.post('http://localhost:8384/deletecustomer', {customerid: deleteID})
+        .then((response) => {
+            alert(response.data)
+        })
+        .catch((err) => {
+            console.log(err)
+        });
     }
 
     return (
         <div>
             <NavBar />
             <h1>Customers Page</h1>
+            <button onClick={handleFormToggle}>Add Customer</button>
+            <br /> <br />
+            <label htmlFor="deleteID">Enter ID to Delete:</label>
+            <input
+                type="number"
+                id="deleteID"
+                value={deleteID}
+                onChange={handleDeleteIDChange}
+            />
+            <button onClick={() => deleteCustomer()}>Delete Customer</button>
+
+
+            {isFormVisible && (
+        <div className="form-popup">
+          <div className="form-container">
+            <h2>Add Customer</h2>
+            <form onSubmit={handleSubmit}>
+              <input 
+                    type="text"
+                    value = {fName}
+                    onChange={ (e) => setFName(e.target.value)}
+                    placeholder="first name" required/>
+              <br />
+              <input 
+                    type="text"
+                    value = {lName}
+                    onChange={ (e) => setLName(e.target.value)} 
+                    placeholder="last name" required/>
+              <br />
+              <input 
+                    type="email"
+                    value = {email} 
+                    onChange={ (e) => setEmail(e.target.value)}
+                    placeholder="email" required/>
+              <br />
+              <input 
+                    type="number" 
+                    value = {addressID}
+                    onChange={ (e) => setAddressID(e.target.value)}
+                    placeholder="address id" required/>
+              <br />
+              <br />
+              <button type="submit">Submit</button>
+            </form>
+            <button onClick={handleFormToggle}>Close</button>
+          </div>
+        </div>
+        )}
+
+            <br></br> <br></br>
             <label htmlFor="myNameInput">Enter Name:</label>
             <input
                 type="text"
@@ -81,13 +180,26 @@ function Customers() {
                     <li 
                     className="list-group-item"
                     key={index}
-                    onClick={() => GetCustomerDetail(customer)}
+                    onClick={() => GetCustomerDetail(customer.customer_id)}
                     >
                         {customer.first_name} {customer.last_name}
                     </li>
                 ))}
             </ul>
             </div>
+
+            <Popup trigger={buttonPopup} setTrigger={setButtonPopup}>
+            {/* <ul>
+          {customerDetailData.map((customer, index) => (
+                Object.entries(customer).map(([key, value]) => (
+                    <p>
+                        {key}: {value}
+                    </p>
+                    ))
+          ))}
+            </ul> */}
+            </Popup>
+
         </div>
     )
 }

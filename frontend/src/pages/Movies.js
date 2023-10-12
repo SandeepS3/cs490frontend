@@ -21,6 +21,11 @@ function Movies() {
         setGenreValue(event.target.value);
     };
 
+    const [inputCustomerID, setCustomerID] = useState('');
+    const handleCustomerIDChange = (event) => {
+        setCustomerID(event.target.value);
+    };
+
     function handleInput(inVal) {
         if (inVal === "Actor"){
             axios.post('http://localhost:8384/actornamemovie', {actorname: inputAName})
@@ -67,6 +72,19 @@ function Movies() {
         .catch((err) => {
             console.log(err)
         });
+    }
+
+    const rentfilm = (inputCustomerID, movieDetailData) => {
+        console.log(inputCustomerID)
+        const filmid = movieDetailData[0].film_id
+        axios.post('http://localhost:8384/rentmovie', {customerid: inputCustomerID, movieid: filmid})
+        .then((response) => {
+            setMovieDetailData(response.data)
+        })
+        .catch((err) => {
+            console.log(err)
+        });
+        setButtonPopup(false)
     }
 
     return (
@@ -130,6 +148,18 @@ function Movies() {
                     ))
           ))}
             </ul>
+            
+            <br></br>
+            <h6>Rent Film to Customer ID: </h6>
+            
+            <label htmlFor="customerID">Customer ID:</label>
+            <input
+                type="number"
+                id="customerID"
+                value={inputCustomerID}
+                onChange={handleCustomerIDChange}
+            />
+            <button onClick={() => rentfilm(inputCustomerID, movieDetailData)}>Submit</button>
             </Popup>
         </div>
         
