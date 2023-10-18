@@ -15,7 +15,7 @@ function Reports() {
             console.log(err)
         });
         const doc = new jsPDF();
-        rentalInfo.forEach((data, index) => {
+        rentalInfo.map((data, index) => {
             if (index > 0) {
               doc.addPage();
             }
